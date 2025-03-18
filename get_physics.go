@@ -34,7 +34,7 @@ func getPhysics() {
 	req.Header.Set("sec-ch-ua-mobile", "?0")
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)
 	req.Header.Set("sec-gpc", "1")
-	req.Header.Set("Cookie", "_dx_uzZo5y=1641785697592RSOSLdVXre7YXItZA6NtZp84qUZqdcgX; _dx_app_111=; _dx_captcha_vid=sl6m8oebm5tdepow; iPlanetDirectoryPro=GdbDfwp2oHQnuGPGqEm10e; SF_cookie_1=29442203; JSESSIONID=3F82307D402F160E105A647B08035DF8")
+	req.Header.Set("Cookie", cookie)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
@@ -45,12 +45,12 @@ func getPhysics() {
 		log.Fatal(err)
 	}
 	fmt.Printf("%s\n", bodyText)
-	ioutil.WriteFile("physics.json", bodyText, 0655)
+	ioutil.WriteFile("jsons/physics.json", bodyText, 0655)
 
 }
 
 func getAllPhysicsDetails() {
-	file, _ := os.ReadFile("physics.json")
+	file, _ := os.ReadFile("jsons/physics.json")
 	var allJson AllJson
 	json.Unmarshal(file, &allJson)
 
@@ -62,7 +62,7 @@ func getAllPhysicsDetails() {
 	}
 
 	marshal, _ := json.Marshal(list)
-	ioutil.WriteFile("physics_details.json", marshal, 0655)
+	ioutil.WriteFile("jsons/physics_details.json", marshal, 0655)
 }
 
 func getOnePhysicsDetail(kchId string) OneJson {
@@ -88,7 +88,7 @@ func getOnePhysicsDetail(kchId string) OneJson {
 	req.Header.Set("sec-ch-ua-mobile", "?0")
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)
 	req.Header.Set("sec-gpc", "1")
-	req.Header.Set("Cookie", "_dx_uzZo5y=1641785697592RSOSLdVXre7YXItZA6NtZp84qUZqdcgX; _dx_app_111=; _dx_captcha_vid=sl6m8oebm5tdepow; iPlanetDirectoryPro=GdbDfwp2oHQnuGPGqEm10e; SF_cookie_1=29442203; JSESSIONID=3F82307D402F160E105A647B08035DF8")
+	req.Header.Set("Cookie", cookie)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
