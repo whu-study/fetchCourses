@@ -109,6 +109,7 @@ type OneJson struct {
 		Status     int    `json:"status"`
 		Usable     bool   `json:"usable"`
 	} `json:"userModel"`
+	Xkbz  string `json:"xkbz"`
 	XqhId string `json:"xqh_id"`
 	Xqumc string `json:"xqumc"`
 	Year  string `json:"year"`
