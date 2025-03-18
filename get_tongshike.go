@@ -89,10 +89,19 @@ func getOneGeneralDetail(kchId string) OneJson {
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)
 	req.Header.Set("sec-gpc", "1")
 	req.Header.Set("Cookie", cookie)
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
+
+	var resp *http.Response
+	for {
+		resp, err = client.Do(req)
+		if err != nil {
+			log.Println(err)
+			log.Println("Retrying...")
+			time.Sleep(time.Second)
+			continue
+		}
+		break
 	}
+
 	defer resp.Body.Close()
 	bodyText, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
