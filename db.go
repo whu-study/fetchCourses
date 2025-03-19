@@ -4,18 +4,54 @@ import (
 	"encoding/json"
 	"fetchCourses/generator"
 	"os"
+	"path"
 )
+
+type filePair struct {
+	OneJsonArrayFilePath string
+	AllJsonFilePath      string
+}
 
 func UpdateDB() {
 
-	var allInfo AllJson
+	filePaths := []filePair{
+		{
+			OneJsonArrayFilePath: "general_details.json",
+			AllJsonFilePath:      "general.json",
+		},
+		{
+			OneJsonArrayFilePath: "major_details.json",
+			AllJsonFilePath:      "major.json",
+		},
+		{
+			OneJsonArrayFilePath: "physics_details.json",
+			AllJsonFilePath:      "physics.json",
+		},
+	}
+	updateDBByJson("jsons/", filePaths...)
+}
+
+func updateDBByJson(fileDir string, filenames ...filePair) {
+
+	//println(path.Join(fileDir, "a.json"))
 	var infos []OneJson
+	var allInfo AllJson
 
-	file1, _ := os.ReadFile("jsons/general_details.json")
-	json.Unmarshal(file1, &infos)
+	table1IdCount := 0
+	table2IdCount := 0
+	for _, filename := range filenames {
+		file1, _ := os.ReadFile(path.Join(fileDir, filename.OneJsonArrayFilePath))
+		json.Unmarshal(file1, &infos)
 
-	file2, _ := os.ReadFile("jsons/general.json")
-	json.Unmarshal(file2, &allInfo)
+		file2, _ := os.ReadFile(path.Join(fileDir, filename.AllJsonFilePath))
+		json.Unmarshal(file2, &allInfo)
+
+		doUpdateDB(allInfo, infos, &table1IdCount, &table2IdCount)
+	}
+
+}
+
+func doUpdateDB(allInfo AllJson, infos []OneJson, table1IdCount *int, table2IdCount *int) {
 
 	if len(infos) != len(allInfo.TmpList) {
 		panic("数据长度不一致")
@@ -24,18 +60,15 @@ func UpdateDB() {
 	resCourse := make([]CourseInfo, 0)
 	resTime := make([]TimeInfo, 0)
 
-	table1IdCount := 0
-	table2IdCount := 0
-
 	for i, info := range infos {
 		if info.Jxdd == "--" || info.Jxdd == "" {
 			continue
 		}
-		table1IdCount++
+		*table1IdCount++
 
 		teacherInfos := extractTeacher(info.Jsxx)
 		resCourse = append(resCourse, CourseInfo{
-			ID:               uint32(table1IdCount),
+			ID:               uint32(*table1IdCount),
 			Years:            info.Year,
 			Semester:         "2",
 			CourseNum:        allInfo.TmpList[i].KchId,
@@ -53,11 +86,11 @@ func UpdateDB() {
 		weekInfo := extractTime(info.Sksj)
 		addressInfo := extractAddress(info.Jxdd)
 		for _, w := range weekInfo {
-			table2IdCount++
+			*table2IdCount++
 
 			resTime = append(resTime, TimeInfo{
-				ID:           uint32(table2IdCount),
-				CourseInfoId: uint32(table1IdCount),
+				ID:           uint32(*table2IdCount),
+				CourseInfoId: uint32(*table1IdCount),
 				WeekAndTime:  generator.WeekLesson2Bin(w.Weeks, w.Lessons),
 				DayOfWeek:    uint8(w.Week),
 				Area:         uint8(addressInfo.Area),
@@ -67,12 +100,6 @@ func UpdateDB() {
 		}
 
 	}
-	//logger.Info("start")
-	//println(database.Client.Error)
-	//if err := router.Routers().Run(":" + config.EnvCfg.ServerPort); err != nil {
-	//	logger.Error("run server error: ", err)
-	//	return
-	//}
 
 	println(len(resCourse), len(resTime))
 

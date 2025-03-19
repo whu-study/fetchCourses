@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -89,21 +88,7 @@ func getOneMajorDetail(kchId string) OneJson {
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)
 	req.Header.Set("sec-gpc", "1")
 	req.Header.Set("Cookie", cookie)
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-	bodyText, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("%s\n", bodyText)
 
-	var oneJson []OneJson
-	json.Unmarshal(bodyText, &oneJson)
+	return doWebGetterWithRetry(client, req)
 
-	//fmt.Println(oneJson)
-
-	return oneJson[0]
 }

@@ -1,14 +1,14 @@
 package main
 
-var cookie = " iPlanetDirectoryPro=KIkwVeRO6wddZP6k6PxBmg; JSESSIONID=EF2DA4606724A8D000E3EDA0E33FAE4D; SF_cookie_1=21025607"
+var cookie = "iPlanetDirectoryPro=34CK6zPrBVLgkZqq7n9c5c; JSESSIONID=EC2A79DCCFACC3BAEF46C327A2A0983A; SF_cookie_1=21025607"
 
 func main() {
 	//UpdateDB()
-	//getMajor()
-	//getAllMajorDetails()
+	getMajor()
+	getAllMajorDetails()
 
-	getGeneral()
-	getAllGeneralDetails()
+	//getGeneral()
+	//getAllGeneralDetails()
 
 	//getPhysics()
 	//getAllPhysicsDetails()

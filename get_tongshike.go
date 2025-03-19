@@ -62,7 +62,11 @@ func getAllGeneralDetails() {
 	}
 
 	marshal, _ := json.Marshal(list)
-	ioutil.WriteFile("jsons/general_details.json", marshal, 0655)
+
+	if err := os.WriteFile("jsons/general_details.json", marshal, 0655); err != nil {
+		log.Fatal(err)
+		return
+	}
 }
 
 func getOneGeneralDetail(kchId string) OneJson {
@@ -90,29 +94,5 @@ func getOneGeneralDetail(kchId string) OneJson {
 	req.Header.Set("sec-gpc", "1")
 	req.Header.Set("Cookie", cookie)
 
-	var resp *http.Response
-	for {
-		resp, err = client.Do(req)
-		if err != nil {
-			log.Println(err)
-			log.Println("Retrying...")
-			time.Sleep(time.Second)
-			continue
-		}
-		break
-	}
-
-	defer resp.Body.Close()
-	bodyText, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("%s\n", bodyText)
-
-	var oneJson []OneJson
-	json.Unmarshal(bodyText, &oneJson)
-
-	//fmt.Println(oneJson)
-
-	return oneJson[0]
+	return doWebGetterWithRetry(client, req)
 }
