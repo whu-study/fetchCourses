@@ -54,6 +54,7 @@ func updateDBByJson(fileDir string, filenames ...filePair) {
 func doUpdateDB(allInfo AllJson, infos []OneJson, table1IdCount *int, table2IdCount *int) {
 
 	if len(infos) != len(allInfo.TmpList) {
+		println(len(infos), len(allInfo.TmpList))
 		panic("数据长度不一致")
 	}
 
@@ -76,7 +77,7 @@ func doUpdateDB(allInfo AllJson, infos []OneJson, table1IdCount *int, table2IdCo
 			Faculty:          info.Kkxymc,
 			Credit:           allInfo.TmpList[i].Xf,
 			CourseComplexion: info.Kcxzmc,
-			CourseType:       allInfo.TmpList[i].Kclxmc,
+			CourseType:       info.Kclbmc,
 			Grade:            "",
 			Major:            "",
 			Teacher:          teacherInfos[0].TeacherName,

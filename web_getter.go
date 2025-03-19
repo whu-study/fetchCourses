@@ -10,12 +10,13 @@ import (
 )
 
 func doWebGetterWithRetry(client *http.Client, req *http.Request) OneJson {
-
+	count := 0
 	var resp *http.Response
 	var err error
 	for {
 		resp, err = client.Do(req)
-		if err != nil {
+		if err != nil && count < 30 {
+			count++
 			log.Println(err)
 			log.Println("Retrying...")
 			time.Sleep(time.Second)
