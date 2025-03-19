@@ -21,7 +21,11 @@ func TestExtractTime(t *testing.T) {
 }
 
 func TestExtractAddress(t *testing.T) {
-	tests := []string{"1区5-403", "2区A309", "1区计-203", "3区枫-101", "国软4-304"}
+	tests := []string{
+		"1区5-403", "2区A309", "1区计-203", "3区枫-101",
+		"国软4-304", "4区01101<br/>4区01101", "新珈楼B120",
+		"桂园网球场", "星湖操场", "卓尔体育馆", "九一二体育场",
+	}
 	for _, str := range tests {
 		marshal, _ := json.Marshal(extractAddress(str))
 		fmt.Println(string(marshal))
@@ -29,7 +33,7 @@ func TestExtractAddress(t *testing.T) {
 }
 
 func TestExtractTeacher(t *testing.T) {
-	tests := []string{"00008396/杜莉/教授;00006329/李雪松/教授"}
+	tests := []string{"00008396/杜莉/教授;00006329/李雪松/教授", "00031202/Matthew P.Lutz/副教授"}
 	for _, str := range tests {
 		marshal, _ := json.Marshal(extractTeacher(str))
 		fmt.Println(string(marshal))

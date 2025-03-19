@@ -85,7 +85,7 @@ func WeekLesson2Bin(weekNums, lessonNums []int) uint32 {
 			log.Fatal("weekNum不能超过19", num)
 		}
 		if res&((1<<31)>>(num-1)) != 0 {
-			log.Fatal("weekNum重复覆盖！")
+			log.Println("weekNum重复覆盖！", weekNums)
 		}
 		res = res | ((1 << 31) >> (num - 1))
 	}
@@ -95,7 +95,7 @@ func WeekLesson2Bin(weekNums, lessonNums []int) uint32 {
 			log.Fatal("lessonNums不能超过13", num)
 		}
 		if res&(1<<(num-1)) != 0 {
-			log.Fatal("lessonNum重复覆盖！")
+			log.Println("lessonNum重复覆盖！", lessonNums)
 		}
 		res = res | (1 << (num - 1))
 	}

@@ -73,6 +73,8 @@ type AddressInfo struct {
 
 var commonAddrRe = regexp.MustCompile(`(\d+)区(([\d` + "\u4e00-\u9fa5" + `]+)-|([A-Z]))(\d+)`)
 var specialAddrRe = regexp.MustCompile(`国软(\d+)-(\d+)`)
+var specialAddrRe2 = regexp.MustCompile(`新珈楼B(\d+)`)
+var specialAddrRe3 = regexp.MustCompile(`(\d+)区(\d{2})(\d{3})`)
 
 func extractAddress(s string) AddressInfo {
 
@@ -89,6 +91,18 @@ func extractAddress(s string) AddressInfo {
 		res.Area = 3
 		res.Building = "国软" + matches[1] + "-教学楼"
 		res.Room = matches[2]
+	} else if matches = specialAddrRe2.FindStringSubmatch(s); len(matches) == 2 {
+		res.Area = 5
+		res.Building = "新珈楼B"
+		res.Room = matches[1]
+	} else if matches = specialAddrRe3.FindStringSubmatch(s); len(matches) == 4 {
+		res.Area, _ = strconv.Atoi(matches[1])
+		res.Building = matches[2] + "-教学楼"
+		res.Room = matches[3]
+	} else if strings.Contains(s, "操场") || strings.Contains(s, "体育") || strings.Contains(s, "场") {
+		res.Area = 6
+		res.Building = s
+		res.Room = "无"
 	} else {
 		panic(fmt.Sprintf("字符串格式不匹配: %s\n", s))
 	}
@@ -102,13 +116,17 @@ type TeacherInfo struct {
 	TeacherTitle string `json:"teacherTitle"`
 }
 
-var teacherRe = regexp.MustCompile(`(\d+)/([` + "\u4e00-\u9fa5" + `]+)/([` + "\u4e00-\u9fa5" + `]+)`)
+// 可能有外语教师！
+var teacherRe = regexp.MustCompile(`(\d+)/([\S\s]+?)/([` + "\u4e00-\u9fa5" + `]+)`)
 
 func extractTeacher(s string) []TeacherInfo {
 	// 00008396/杜莉/教授;00006329/李雪松/教授
 
 	matches := teacherRe.FindAllStringSubmatch(s, -1)
 	var result []TeacherInfo
+	if len(matches) == 0 {
+		panic(s)
+	}
 	for _, match := range matches {
 		result = append(result, TeacherInfo{
 			TeacherId:    match[1],

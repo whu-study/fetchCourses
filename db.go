@@ -5,6 +5,7 @@ import (
 	"fetchCourses/generator"
 	"os"
 	"path"
+	"strings"
 )
 
 type filePair struct {
@@ -62,7 +63,7 @@ func doUpdateDB(allInfo AllJson, infos []OneJson, table1IdCount *int, table2IdCo
 	resTime := make([]TimeInfo, 0)
 
 	for i, info := range infos {
-		if info.Jxdd == "--" || info.Jxdd == "" {
+		if info.Jxdd == "--" || info.Jxdd == "" || strings.Contains(info.Jxdd, "虚拟教室") {
 			continue
 		}
 		*table1IdCount++
