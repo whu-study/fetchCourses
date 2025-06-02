@@ -19,10 +19,7 @@ var Conf struct {
 		Database    string `yaml:"database" json:"database"`
 		AutoMigrate bool   `yaml:"auto_migrate" json:"autoMigrate"`
 	} `yaml:"mysql" json:"mysql"`
-	Server struct {
-		Port string `yaml:"port" json:"port"`
-	} `yaml:"server" json:"server"`
-	JwtSecurityKey string `yaml:"jwt_security_key" json:"jwtSecurityKey"`
+	Cookie string `yaml:"cookie" json:"cookie"`
 }
 
 // LoadConfig 加载配置文件

@@ -5,6 +5,4 @@ mysql:
   password: 12345678
   database: cengke_helper_db
   auto_migrate: true
-server:
-  port: 8033
-jwt_security_key: 1234567890abcdef
+cookie: ""

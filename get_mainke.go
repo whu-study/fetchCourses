@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fetchCourses/config"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -33,7 +34,7 @@ func getMajor() {
 	req.Header.Set("sec-ch-ua-mobile", "?0")
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)
 	req.Header.Set("sec-gpc", "1")
-	req.Header.Set("Cookie", cookie)
+	req.Header.Set("Cookie", config.Conf.Cookie)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
@@ -87,7 +88,7 @@ func getOneMajorDetail(kchId string) OneJson {
 	req.Header.Set("sec-ch-ua-mobile", "?0")
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)
 	req.Header.Set("sec-gpc", "1")
-	req.Header.Set("Cookie", cookie)
+	req.Header.Set("Cookie", config.Conf.Cookie)
 
 	return doWebGetterWithRetry(client, req)
 
