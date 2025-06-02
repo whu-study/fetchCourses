@@ -1,13 +1,16 @@
-package main
+package database
 
 import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-var Client *gorm.DB
+func InitSqlite() {
+	if isInit {
+		return
+	}
+	isInit = true
 
-func init() {
 	var err error
 	var cfg gorm.Config
 	cfg = gorm.Config{
@@ -20,12 +23,4 @@ func init() {
 	}
 
 	TableAutoMigrate()
-}
-
-func TableAutoMigrate() {
-	if err := Client.AutoMigrate(&TimeInfo{}, &CourseInfo{}); err != nil {
-		panic(err)
-		return
-	}
-
 }

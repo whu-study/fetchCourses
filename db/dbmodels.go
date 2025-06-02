@@ -1,4 +1,4 @@
-package main
+package database
 
 type CourseInfo struct {
 	ID         uint32 `gorm:"not null;primaryKey;autoIncrement" json:"id"`
@@ -16,6 +16,11 @@ type CourseInfo struct {
 	Major            string `gorm:"not null;type:varchar(255)" json:"major"`
 	Teacher          string `gorm:"not null;type:varchar(255)" json:"teacher"`
 	TeacherTitle     string `gorm:"not null;type:varchar(255)" json:"teacherTitle"`
+
+	Description string `gorm:"type:text" json:"description,omitempty"`
+
+	AverageRating float32 `gorm:"default:0" json:"rating,omitempty"`
+	ReviewCount   uint    `gorm:"default:0" json:"reviewCount,omitempty"`
 }
 
 type TimeInfo struct {

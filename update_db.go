@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fetchCourses/db"
 	"fetchCourses/generator"
 	"os"
 	"path"
@@ -59,8 +60,8 @@ func doUpdateDB(allInfo AllJson, infos []OneJson, table1IdCount *int, table2IdCo
 		panic("数据长度不一致")
 	}
 
-	resCourse := make([]CourseInfo, 0)
-	resTime := make([]TimeInfo, 0)
+	resCourse := make([]database.CourseInfo, 0)
+	resTime := make([]database.TimeInfo, 0)
 
 	for i, info := range infos {
 		if info.Jxdd == "--" || info.Jxdd == "" || strings.Contains(info.Jxdd, "虚拟教室") {
@@ -69,7 +70,7 @@ func doUpdateDB(allInfo AllJson, infos []OneJson, table1IdCount *int, table2IdCo
 		*table1IdCount++
 
 		teacherInfos := extractTeacher(info.Jsxx)
-		resCourse = append(resCourse, CourseInfo{
+		resCourse = append(resCourse, database.CourseInfo{
 			ID:               uint32(*table1IdCount),
 			Years:            info.Year,
 			Semester:         "2",
@@ -90,7 +91,7 @@ func doUpdateDB(allInfo AllJson, infos []OneJson, table1IdCount *int, table2IdCo
 		for _, w := range weekInfo {
 			*table2IdCount++
 
-			resTime = append(resTime, TimeInfo{
+			resTime = append(resTime, database.TimeInfo{
 				ID:           uint32(*table2IdCount),
 				CourseInfoId: uint32(*table1IdCount),
 				WeekAndTime:  generator.WeekLesson2Bin(w.Weeks, w.Lessons),
@@ -105,12 +106,12 @@ func doUpdateDB(allInfo AllJson, infos []OneJson, table1IdCount *int, table2IdCo
 
 	println(len(resCourse), len(resTime))
 
-	batchInsert[CourseInfo](resCourse)
-	batchInsert[TimeInfo](resTime)
+	batchInsert[database.CourseInfo](resCourse)
+	batchInsert[database.TimeInfo](resTime)
 
 }
 
-func batchInsert[T CourseInfo | TimeInfo](data []T) {
+func batchInsert[T database.CourseInfo | database.TimeInfo](data []T) {
 	batchSize := 500
 	for i := 0; i < len(data); i += batchSize {
 		end := i + batchSize
@@ -118,7 +119,7 @@ func batchInsert[T CourseInfo | TimeInfo](data []T) {
 			end = len(data)
 		}
 
-		if err := Client.Save(data[i:end]).Error; err != nil {
+		if err := database.Client.Save(data[i:end]).Error; err != nil {
 			panic(err)
 			return
 		}
