@@ -15,13 +15,13 @@ type WeekInfo struct {
 
 func extractTime(s string) []WeekInfo {
 	weekMapping := map[string]int{
+		"星期日": 0,
 		"星期一": 1,
 		"星期二": 2,
 		"星期三": 3,
 		"星期四": 4,
 		"星期五": 5,
 		"星期六": 6,
-		"星期日": 7,
 	}
 
 	// 修改后的正则表达式，包含对“周”字的匹配
@@ -36,6 +36,7 @@ func extractTime(s string) []WeekInfo {
 		endLesson, _ := strconv.Atoi(match[3])
 		weekRanges := strings.Split(match[4], ",")
 
+		// 生成 weeks
 		var weeks []int
 		for _, weekRange := range weekRanges {
 			weekRange = strings.TrimSpace(weekRange)
@@ -53,7 +54,12 @@ func extractTime(s string) []WeekInfo {
 			}
 		}
 
-		lessons := []int{startLesson, endLesson}
+		// 生成 lessons
+		lessons := make([]int, 0)
+		for l := startLesson; l <= endLesson; l++ {
+			lessons = append(lessons, l)
+		}
+
 		info := WeekInfo{
 			Week:    week,
 			Weeks:   weeks,

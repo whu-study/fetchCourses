@@ -10,14 +10,17 @@ func TestExtractTime(t *testing.T) {
 	obj1 := extractTime("星期三第11-12节{7周,11-13周}<br/>星期三第11-13节{2-6周,8-10周}")
 	obj2 := extractTime("星期二第11-13节{1-11周}")
 	obj3 := extractTime("星期一第11-13节{1-6周}<br/>星期二第11-13节{1-5周}")
+	obj4 := extractTime("星期四第3-5节{1-15周}")
 
 	s1, _ := json.Marshal(obj1)
 	s2, _ := json.Marshal(obj2)
 	s3, _ := json.Marshal(obj3)
+	s4, _ := json.Marshal(obj4)
 
 	println(string(s1))
 	println(string(s2))
 	println(string(s3))
+	println(string(s4))
 }
 
 func TestExtractAddress(t *testing.T) {
